@@ -12,10 +12,11 @@ import javax.swing.ImageIcon;
  *
  * @author D
  */
-public class Sprite {
+public class Sprite implements WorldPaintable {
     
-    // Used for location
+    // Used for location, TODO: remove me and use Location system
     private double x,y;
+    private Location location;
     
     // Used to draw to screen
     private ImageIcon[] images;
@@ -25,6 +26,11 @@ public class Sprite {
         images = img;
         x = xpos;
         y = ypos;
+        location = new Location(xpos, ypos);
+    }
+    
+    public Sprite(ImageIcon[] img, Location l) {
+        this(img, l.x, l.y);
     }
     
     // Use me for animation or Enitity
@@ -67,7 +73,12 @@ public class Sprite {
         images = s.images;
     }
     
-    public void paint(Graphics g) {
+    @Override
+    public void paint(Graphics g, int textureIndex, int xpos, int ypos) {
+        g.drawImage(images[textureIndex].getImage(), xpos, ypos, null);
+    }
+    
+    public void paint(Graphics g, int xpos, int ypos) {
         if(images.length > 1) {
             
             int timePerImage = (int)(1000/(double)images.length);
@@ -80,34 +91,26 @@ public class Sprite {
                 }
             }
             
-            int width = images[imageToDisplay].getIconWidth();
-            int height = images[imageToDisplay].getIconHeight();
-
-            g.drawImage(images[imageToDisplay].getImage(), (int)(x-width/2), (int)(y-height/2), null);
+            paint(g, imageToDisplay, xpos, ypos);
         } else {
             int width = images[0].getIconWidth();
             int height = images[0].getIconHeight();
 
-            g.drawImage(images[0].getImage(), (int)(x-width/2), (int)(y-height/2), null);
+            paint(g, 0, xpos, ypos);
         }
     }
     
-    // Force which image in the list should be used
-    public void paint(Graphics g, int imageIndex) {
-        try {
-            int width = images[imageIndex].getIconWidth();
-            int height = images[imageIndex].getIconHeight();
-
-            g.drawImage(images[imageIndex].getImage(), (int)(x-width/2), (int)(y-height/2), null);
-        } catch(ArrayIndexOutOfBoundsException e) {
-            int width = images[0].getIconWidth();
-            int height = images[0].getIconHeight();
-            System.out.println("Out of bounds. Loading first texture");
-            g.drawImage(images[0].getImage(), (int)(x-width/2), (int)(y-height/2), null);
-        }
+    public void paint(Graphics g) {
+        int width = images[0].getIconWidth();
+        int height = images[0].getIconHeight();
+        paint(g, (int)(x-width/2.0), (int)(y-height/2.0));
     }
     
-    
+    public void paint(Graphics g, int textureIndex) {
+        int width = images[textureIndex].getIconWidth();
+        int height = images[textureIndex].getIconHeight();
+        paint(g, textureIndex, (int)(x-width/2.0), (int)(y-height/2.0));
+    }   
     
     /* Mutators and accessors */
     

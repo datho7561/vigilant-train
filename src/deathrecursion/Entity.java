@@ -136,6 +136,9 @@ public class Entity extends Sprite {
         
     }
     
+    //public void paint(Graphics);
+    
+    @Override
     public void paint(Graphics g) {
         
         int textureToLoad = 1;
