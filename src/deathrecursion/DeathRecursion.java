@@ -32,6 +32,7 @@ public class DeathRecursion extends JPanel {
     
     private Sprite[][] boringBorder;
     private Entity player;
+    private GenericBaddy bad;
     private Sprite otherBoringSprite;
     
     public DeathRecursion() {
@@ -60,6 +61,7 @@ public class DeathRecursion extends JPanel {
             "torch_1", "torch_2", "torch_3", "torch_4",
             "torch_1", "torch_2", "torch_3", "torch_4"}, 48, 48);
         player = new Entity("basicchar", 150, 150);
+        bad = new GenericBaddy("lel", 200, 200);
         
         
     }
@@ -114,6 +116,7 @@ public class DeathRecursion extends JPanel {
         }
         
         player.update(playerMotionDirection);
+        bad.update(0);
         
         this.repaint();
     }
@@ -136,6 +139,7 @@ public class DeathRecursion extends JPanel {
         
         // Player shuold be one of the last things to paint
         player.paint(preg);
+        bad.paint(preg);
         
         
         g.drawImage(sbi.getScaledInstance(this.getWidth(), this.getHeight(), BufferedImage.SCALE_FAST), 0, 0, null);

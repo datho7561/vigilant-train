@@ -5,6 +5,8 @@
  */
 package deathrecursion;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author D
@@ -15,8 +17,28 @@ public class World {
     
     private Passage[] links;
     
+    private Entity[] entities;
+    
     public World(String filepath) {
         // TODO: read rooms and passages from file to construct the World
+    }
+
+    public Entity[] getEntitiesInRadius(double x, double y, double r) {
+        ArrayList<Entity> es = new ArrayList<>();
+        
+        for(Entity e: entities) {
+            if (DimensionalTools.distance(x, y, e.getX(), e.getY()) < r) {
+                es.add(e);
+            }
+        }
+        
+        Entity[] output = new Entity[es.size()];
+        for(int i = 0; i < es.size(); i++) {
+            output[i] = es.get(i);
+        }
+        
+        return output;
+        
     }
     
     private class Passage {

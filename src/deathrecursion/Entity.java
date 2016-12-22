@@ -16,7 +16,8 @@ public class Entity extends Sprite {
     private static final double MAX_VELOCITY = 10;
     
     private static final double ACCELERATION_RATE = 0.5;
-    private static final double DIAGONAL_ACCELERATION = Math.sqrt(ACCELERATION_RATE/4);
+    private static final double DIAGONAL_ACCELERATION = Math.sqrt(ACCELERATION_RATE)/2;
+    private static final short MAX_HEALTH = 15;
     
     private static final int ANIMATION_FPS= 7;
     
@@ -25,6 +26,7 @@ public class Entity extends Sprite {
     private double xVelocity, yVelocity, velocity;
     private int animationFrame;
     private long lastAnimationFrameTime;
+    private short health;
     
     // shuold be used for most entities
     public Entity(String filename, double posx, double posy) {
@@ -37,6 +39,7 @@ public class Entity extends Sprite {
         facingDirection = 4;
         animationFrame = 0;
         lastAnimationFrameTime = System.currentTimeMillis();
+        health = MAX_HEALTH;
     }
     
     // copy entity
@@ -47,6 +50,7 @@ public class Entity extends Sprite {
         facingDirection = e.facingDirection;
         animationFrame = e.animationFrame;
         lastAnimationFrameTime = e.lastAnimationFrameTime;
+        health = e.health;
     }
     
     // accelerates the entity in a direction from 0 to 7, 0 being straight up. anything out of bounds will not accelerate the entity
@@ -136,7 +140,20 @@ public class Entity extends Sprite {
         
     }
     
-    //public void paint(Graphics);
+    public void attack(World w) {
+        Entity[] entities = w.getEntitiesInRadius(getX(), getY(), 5);
+        for(Entity e: entities) {
+            e.damage(1);
+        }
+    }
+    
+    public boolean isDead() {
+        return health>0;
+    }
+    
+    public void damage(int amount) {
+        if (health > 0) health--;
+    }
     
     @Override
     public void paint(Graphics g) {
